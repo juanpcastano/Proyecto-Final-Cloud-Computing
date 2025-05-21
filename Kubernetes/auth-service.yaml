@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-service
+  template:
+    metadata:
+      labels:
+        app: auth-service
+    spec:
+      containers:
+        - name: auth-service
+          image: notkuello/propath-backend-auth-service:latest
+          ports:
+            - containerPort: 3002
+          env:
+            - name: PORT
+              value: "3002"
+            - name: HOST
+              value: "0.0.0.0"
+            - name: DB_HOST
+              value: "postgres"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USERNAME
+              value: "propath"
+            - name: DB_PASSWORD
+              value: "propath123"
+            - name: DB_NAME
+              value: "propath_db"
+            - name: DB_SYNC
+              value: "true"
+            - name: JWT_SECRET
+              value: "secretote"
+            - name: JWT_REFRESH_SECRET
+              value: "otrosecretote"
+            - name: JWT_EXPIRATION
+              value: "7d"
+            - name: JWT_REFRESH_EXPIRATION
+              value: "10d"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+spec:
+  selector:
+    app: auth-service
+  ports:
+    - protocol: TCP
+      port: 3002
+      targetPort: 3002
+  type: ClusterIP
+

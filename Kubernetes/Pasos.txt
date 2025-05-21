@@ -1,0 +1,76 @@
+Tener instalado minikube y kubectl
+
+Iniciar minikube:
+
+minikube start
+
+Aplicar los archivos yaml:
+
+kubectl apply -f postgres.yaml
+kubectl apply -f path-management.yaml
+kubectl apply -f auth-service.yaml
+kubectl apply -f user-management.yaml
+kubectl apply -f ai-service.yaml
+kubectl apply -f smtp-service.yaml
+kubectl apply -f api-gateway.yaml
+
+Puedes verificar con:
+
+kubectl get pods
+kubectl get svc
+
+Verificar que los pods esten corriendo (tardan un poco en correr):
+
+kubectl get pods
+
+Deberias ver algo como:
+
+NAME                               READY   STATUS    RESTARTS      AGE
+ai-service-6b678cd9c6-ch7mc        1/1     Running   0             36m
+ai-service-6b678cd9c6-q5psp        1/1     Running   0             37m
+api-gateway-59768fd595-bn2h9       1/1     Running   0             37m
+api-gateway-59768fd595-kzxfl       1/1     Running   0             36m
+auth-service-5fbdc9747-4xqcr       1/1     Running   1 (35m ago)   37m
+path-management-c7c5f979b-4grqh    1/1     Running   1 (35m ago)   37m
+postgres-78c79d9449-lkj58          1/1     Running   0             37m
+smtp-service-596f7459ff-tx2n9      1/1     Running   0             37m
+user-management-75f9675868-tkl5b   1/1     Running   0             37m
+
+Obten la URL del api-gateway:
+
+minikube service api-gateway --url
+
+Esa url sera la url que se usara en las peticiones del postman 
+
+(Nota: si se realiza mediante una maquina virtual, hay que utilizar el comando kubectl port-forward --address 0.0.0.0 service/api-gateway 8090:3000
+para poder correrlo desde la maquina host en la direccion <ip-maquina-virtual>:8090)
+
+Instalar helm
+
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+
+Verificar la existencia de los pods de litmus
+
+kubectl get pods -n litmus
+kubectl get svc -n litmus
+
+Instalar Litmus Chaos
+
+helm repo add litmuschaos https://litmuschaos.github.io/litmus-helm/
+helm repo list
+
+kubectl create ns litmus
+
+helm install chaos litmuschaos/litmus --namespace=litmus \
+--set portal.frontend.service.type=NodePort \
+--set portal.server.graphqlServer.genericEnv.CHAOS_CENTER_UI_ENDPOINT=http://chaos-litmus-frontend-service.litmus.svc.cluster.local:9091/
+
+Abrir portal de Litmus Chaos:
+
+minikube service chaos-litmus-frontend-service -n litmus
+
+En la interfaz descargar
+
+
