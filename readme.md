@@ -1,4 +1,4 @@
-# Patrones De tolerancia a fallos en Kubernetes
+# Patrones de tolerancia a fallos en Kubernetes
 
 ## Requisitos previos
 
@@ -47,6 +47,8 @@ postgres-78c79d9449-lkj58          1/1     Running   0             37m
 smtp-service-596f7459ff-tx2n9      1/1     Running   0             37m
 user-management-75f9675868-tkl5b   1/1     Running   0             37m
 ```
+
+Nota: no todos los servicios se añadieron en el repositorio por cuestiones de subidas de credenciales y apikeys
 
 ---
 
